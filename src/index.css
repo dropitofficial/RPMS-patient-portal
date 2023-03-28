@@ -42,8 +42,8 @@ code {
   max-width: 500px;
   padding: 30px;
   border-radius: 20px;
-  color: black;
-  background-color: #5b9af8;
+  color: white;
+  background-color: #15335d;
   box-shadow: 3px 10px 18px 4px var(--drop-shadow);
   align-items: center;
   justify-content: center;
@@ -93,11 +93,14 @@ code {
   font-size: 15px;
 }
 .btnn{
-  background-color: #00009b;
+  background-color: #ff2f00;
   display: flex;
   color: white;
   justify-content: center;
   align-items: center;
+}
+.dark-red{
+  color: #ff2f00;
 }
 
 

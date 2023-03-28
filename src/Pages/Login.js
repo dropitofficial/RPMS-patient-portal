@@ -11,11 +11,11 @@ const Login = () => {
                 <p><b>Remote Patient Monitoring System</b></p>
 
                 <input placeholder="Enter username"
-                    name="email"
+                    name="username"
                     type="text" 
                     className='emailinput'/>
                 <input placeholder="Enter password"
-                    name="email"
+                    name="password"
                     type="password" 
                     className='passinput'
                     />
@@ -25,7 +25,7 @@ const Login = () => {
 
                 <div>
                     <p className="bold">
-                        Forgot Password? <Link className='link' to={""}><b>SignUp</b></Link>
+                        Forgot Password? <Link className='link' to={"https://github.com/Eby-Tom/RPMS-Patient-Panel"}><b className='dark-red'>Contact Us</b></Link>
                     </p>
 
                 </div>
