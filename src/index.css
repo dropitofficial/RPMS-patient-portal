@@ -237,7 +237,7 @@ code {
   position: relative;
   margin-top: 20px;
   background-color: #c7ceff;
-  height: calc(100vh - 230px);
+  height: calc(100vh - 190px);
   width: 95vw;
   max-width: 530px;
   border-radius: 12px;
@@ -290,7 +290,7 @@ code {
 }
 .react-calendar{
   width: min(95vw,530px) !important;
-  height: 300px;
+  height: 290px;
   border-bottom-left-radius: 12px;
   border-bottom-right-radius: 12px;
   box-shadow: 0px 12px 20px 3px #626262;
