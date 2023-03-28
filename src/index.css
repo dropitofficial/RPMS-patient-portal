@@ -47,6 +47,7 @@ code {
   box-shadow: 3px 10px 18px 4px var(--drop-shadow);
   align-items: center;
   justify-content: center;
+  box-shadow: 0px 12px 20px 3px #626262;
 }
 
 .registration-inner .input {
@@ -122,6 +123,7 @@ code {
   border-radius: 18px;
   padding: 50px 10px ;
   margin-top: -20px;
+  box-shadow: 0px 12px 20px 3px #626262;
 }
 .userlogo{
   height: 100px;
