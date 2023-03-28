@@ -14,7 +14,7 @@ console.log(messages);
                 ...pre, {
                     msg: snap.val().msg,
                     isdoctor: snap.val().isdoctor
-                }
+                }       
             ]))
         ])
     }, [])
