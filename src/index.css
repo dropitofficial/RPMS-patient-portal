@@ -370,11 +370,12 @@ code {
   background-color: red;
   width: fit-content;
   margin: auto;
-  padding: 10px 20px;
+  padding: 7px 20px;
   border-radius: 12px;
   margin-top: 30px;
+  color: white;
+  box-shadow: 2px 5px 15px 1px #8a8a8a;
 }
 .logoutbtn:hover{
   background-color: #d40000;
-  color: white;
 }
