@@ -1,35 +1,108 @@
 import React, { useState } from 'react'
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { Link, useNavigate } from 'react-router-dom'
 const Login = () => {
 
     const navigate = useNavigate()
+    const [isSignedup, setisSignedup] = useState(true)
+    const [email, setemail] = useState("")
+    const [password, setpassword] = useState("")
+
+    // Initialize Firebase Authentication and get a reference to the service
+    const auth = getAuth();
+
+    const register=()=>{
+    createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            // Signed in 
+            const user = userCredential.user;
+            // ...
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            // ..
+        });
+    }
+
+    const login=()=>{
+    signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            // Signed in 
+            const user = userCredential.user;
+            // ...
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+        });
+    }
+
     return (
         <div className="registeration-outer">
-            <div className="registration-inner">
+            {
+                isSignedup ?
+                    <div className="registration-inner">
 
-                <div className="font-22px">Login</div>
-                <p><b>Remote Patient Monitoring System</b></p>
+                        <div className="font-22px">Login</div>
+                        <p><b>Remote Patient Monitoring System</b></p>
 
-                <input placeholder="Enter username"
-                    name="username"
-                    type="text" 
-                    className='emailinput'/>
-                <input placeholder="Enter password"
-                    name="password"
-                    type="password" 
-                    className='passinput'
-                    />
-                    <div className='passinput btnn'>
-                        <b>Login</b>
+                        <input placeholder="Enter email"
+                            name="username"
+                            type="text"
+                            value={email}
+                            onChange={(e)=>setemail(e.target.value)}
+                            className='emailinput' />
+                        <input placeholder="Enter password"
+                            name="password"
+                            value={password}
+                            onChange={(e)=>setpassword(e.target.value)}
+                            type="password"
+                            className='passinput'
+                        />
+                        <div onClick={()=>login()} className='passinput btnn'>
+                            <b>Login</b>
+                        </div>
+
+                        <div>
+                            <p className="bold">
+                                Not registered yet? <Link className='link' onClick={() => { setisSignedup(false) }}><b className='dark-red'>Register</b></Link>
+                            </p>
+
+                        </div>
                     </div>
+                    :
+                    <div className="registration-inner">
 
-                <div>
-                    <p className="bold">
-                        Forgot Password? <Link className='link' to={"https://github.com/Eby-Tom/RPMS-Patient-Panel"}><b className='dark-red'>Contact Us</b></Link>
-                    </p>
+                        <div className="font-22px">Register</div>
+                        <p><b>Remote Patient Monitoring System</b></p>
 
-                </div>
-            </div>
+                        <input placeholder="Enter username"
+                            name="username"
+                            type="text"
+                            value={email}
+                            onChange={(e)=>setemail(e.target.value)}
+                            className='emailinput' />
+                        <input placeholder="Enter password"
+                            name="password"
+                            type="password"
+                            value={email}
+                            onChange={(e)=>setpassword(e.target.value)}
+                            className='passinput'
+                        />
+                        <div onClick={()=>register()} className='passinput btnn'>
+                            <b>Register</b>
+                        </div>
+
+                        <div>
+                            <p className="bold">
+                                already registered? <Link className='link' onClick={() => setisSignedup(true)}><b className='dark-red'>Login</b></Link>
+                            </p>
+
+                        </div>
+                    </div>
+            }
+
 
         </div>
     )
