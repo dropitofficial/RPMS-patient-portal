@@ -7,35 +7,39 @@ const Login = () => {
     const [isSignedup, setisSignedup] = useState(true)
     const [email, setemail] = useState("")
     const [password, setpassword] = useState("")
+    const [isloader, setisloader] = useState(false)
 
     // Initialize Firebase Authentication and get a reference to the service
     const auth = getAuth();
 
-    const register=()=>{
-    createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            // Signed in 
-            const user = userCredential.user;
-            // ...
-        })
-        .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            // ..
-        });
+    const register = () => {
+        createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                // Signed in 
+                const user = userCredential.user;
+                // ...
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                // ..
+            });
     }
 
-    const login=()=>{
-    signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            // Signed in 
-            const user = userCredential.user;
-            // ...
-        })
-        .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-        });
+    const login = () => {
+        setisloader(true);
+        signInWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                // Signed in 
+                const user = userCredential.user;
+                // ...
+                setisloader(false);
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                setisloader(false);
+            });
     }
 
     return (
@@ -51,17 +55,22 @@ const Login = () => {
                             name="username"
                             type="text"
                             value={email}
-                            onChange={(e)=>setemail(e.target.value)}
+                            onChange={(e) => setemail(e.target.value)}
                             className='emailinput' />
                         <input placeholder="Enter password"
                             name="password"
                             value={password}
-                            onChange={(e)=>setpassword(e.target.value)}
+                            onChange={(e) => setpassword(e.target.value)}
                             type="password"
                             className='passinput'
                         />
-                        <div onClick={()=>login()} className='passinput btnn'>
-                            <b>Login</b>
+                        <div onClick={() => login()} className='passinput btnn'>
+                            {isloader ?
+                                <div className="loader"></div>
+                                :
+                                <b>Login</b>
+
+                            }
                         </div>
 
                         <div>
@@ -81,16 +90,16 @@ const Login = () => {
                             name="username"
                             type="text"
                             value={email}
-                            onChange={(e)=>setemail(e.target.value)}
+                            onChange={(e) => setemail(e.target.value)}
                             className='emailinput' />
                         <input placeholder="Enter password"
                             name="password"
                             type="password"
                             value={email}
-                            onChange={(e)=>setpassword(e.target.value)}
+                            onChange={(e) => setpassword(e.target.value)}
                             className='passinput'
                         />
-                        <div onClick={()=>register()} className='passinput btnn'>
+                        <div onClick={() => register()} className='passinput btnn'>
                             <b>Register</b>
                         </div>
 

@@ -5,11 +5,10 @@ import Routes from './Routes';
 import { useEffect, useState } from 'react';
 
 function App() {
-
   return (
     <div className="App">
       <Firebase>
-        <Routes currentuser={user} />
+        <Routes />
       </Firebase>
     </div>
   );

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom"
 
 import { ChevronRightIcon, ShareAndroidIcon, SyncIcon } from "@primer/octicons-react"
 import Header from "../Components/Header"
+import { getAuth, signOut } from "firebase/auth"
 // import { GithubFilled, InstagramFilled, LinkedinFilled } from "@ant-design/icons"
 
 const Profile = () => {
@@ -30,7 +31,14 @@ const Profile = () => {
                     <div><b>Dr. Lokesh</b></div>
                     <div><b>HK Hospital, Kengeri</b></div>
                 </div>
-                <div className="logoutbtn"><div><b>Logout</b></div></div>
+                <div className="logoutbtn"><div onClick={()=>{
+                    signOut(getAuth()).then(() => {
+                        // Sign-out successful.
+                        console.log("logged ou");
+                      }).catch((error) => {
+                        // An error happened.
+                      });
+                }}><b>Logout</b></div></div>
             </div>
             
         </div>

@@ -1,9 +1,9 @@
 import React, { createContext, useEffect, useState } from 'react'
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { onAuthStateChanged } from 'firebase/auth';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
-const FireContext = createContext()
+export const FireContext = createContext()
 
 const Firebase = (props) => {
     const [isapion, setIsapion] = useState(false)
@@ -30,15 +30,17 @@ const Firebase = (props) => {
       useEffect(() => {
         if(!isapion) return
 
-        onAuthStateChanged((user)=>{
+        onAuthStateChanged(getAuth(), (user) => {
+          console.log(user);
           setUser(user)
         })
       }, [isapion])
       
-
       if(!isapion)
       {
-        return <div></div>
+        return <div>
+          ....
+        </div>
       }
   return (
     <FireContext.Provider value={{user}}>

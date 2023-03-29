@@ -1,22 +1,37 @@
 import { ArrowRightIcon } from '@primer/octicons-react'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { getDatabase, onChildAdded, push, ref } from 'firebase/database'
 
 const Chats = () => {
     const [reply, setReply] = useState("")
     const [messages, setMessages] = useState([])
+    const messageEnd = useRef(null)
     // const [uid, setUid] = useState(localStorage.getItem(uid))
 
-    console.log(messages);
-    useEffect(() => {
+    const scrollToBottom = () =>{
+        messageEnd.current.scrollIntoView({
+        block: 'end', 
+        behavior:"smooth"
+        })
+    }
 
+useEffect(() => {
+  scrollToBottom()
+}, [messages])
+
+
+    useEffect(() => {
         const unsubscribe = onChildAdded(ref(getDatabase(), "messages/t8QV7laQMdgaol3smIbaD8dxHdy21677127724271"), (snap) => [
-            setMessages(pre => ([
-                ...pre, {
-                    msg: snap.val().message,
-                    isdoctor: snap.val().isdoctor
-                }
-            ]))
+            setMessages(pre => {
+                if(pre.length && pre[pre.length-1].msg == snap.val().message) return pre
+
+                return [
+                    ...pre, {
+                        msg: snap.val().message,
+                        isdoctor: snap.val().isdoctor
+                    }
+                ]
+            })
         ])
 
         return () => unsubscribe
@@ -28,11 +43,13 @@ const Chats = () => {
                 message:reply,
                 isdoctor:false
             }).then(() => {
+                console.log("dfgdfg");
                 setReply("")
             }).catch(err=>{
                 console.log(err);
             })
     }
+
     return (
         <div>
             <div className='chats'>
@@ -51,17 +68,23 @@ const Chats = () => {
                             ))
                         }
                         {
-                            // messages.length==0&&
-                            // (
-
-                            // )
+                            messages.length==0&&
+                            (
+                                <div className="chatloader loader"></div>
+                            )
                         }
+                        <div className='msgcon height0' style={{opacity:0, margin:0, padding:0}} ref={messageEnd}></div>
                     </div>
                 </div>
                 <div className='chatbox'>
                     <input
                     value={reply}
                         onChange={(e) => setReply(e.target.value)}
+                        onKeyDown={(e)=>{
+                            if(e.key == "Enter"){
+                                sendmessage()
+                            }
+                        }}
                         type="text" placeholder='Enter mesage here...' />
                     <div onClick={() => sendmessage()} className='sendbtn'>
                         <ArrowRightIcon size={24} />
