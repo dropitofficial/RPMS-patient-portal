@@ -14,6 +14,7 @@ const Profile = () => {
 
     const copyuid=()=>{
         navigator.clipboard.writeText(userdetails.uid);
+        alert(userdetails.uid)
     }
 
     return (
