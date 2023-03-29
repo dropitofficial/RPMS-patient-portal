@@ -49,7 +49,6 @@ const Firebase = (props) => {
     if (!isapion) return
 
     onAuthStateChanged(getAuth(), (user) => {
-      console.log(user);
       setUser(user)
       setisready(true)
       if (user) {

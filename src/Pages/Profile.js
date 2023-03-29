@@ -12,6 +12,10 @@ const Profile = () => {
     const [bookAppo, setbookAppo] = useState(false)
     const [date, setdate] = useState("")
 
+    const copyuid=()=>{
+        navigator.clipboard.writeText(userdetails.uid);
+    }
+
     return (
         <div>
             <Header />
@@ -20,7 +24,8 @@ const Profile = () => {
                     <img className="userlogo" src="user.png" />
                     <div className="profile-head">
                         <h1>{userdetails.displayName}</h1>
-                        <b>{userdetails.uid}</b>
+                        <div onClick={()=>copyuid()} className="copybtn">Patient UID</div>
+                        {/* <b>{userdetails.uid}</b> */}
                     </div>
                     <div className="user-details">
                         <b>{userdetails.age}</b>

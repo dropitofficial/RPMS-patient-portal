@@ -12,16 +12,12 @@ const Measures = () => {
     const [dbDate, setdbDate] = useState(new Date().toLocaleDateString('en-GB').split("/").join("-"))
     const [values, setvalues] = useState([])
 
-console.log(date.toLocaleDateString('en-GB').split("/").join("-"))
-
     useEffect(() => {
         const dbRef = ref(getDatabase());
-    console.log(`patients/${userdetails.uid}/values/${dbDate}`);
         get(child(dbRef, `/patients/${userdetails.uid}/values/${dbDate}`)).then((snapshot) => {
           if (snapshot.exists()) {
             setvalues(snapshot.val())
             setvalueExists(true)
-            console.log(snapshot.val());
           } else {
             setvalueExists(false)
           }
