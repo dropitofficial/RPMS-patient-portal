@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { getDatabase, ref, set } from "firebase/database";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { Link, useNavigate } from 'react-router-dom'
 const Login = () => {
@@ -17,6 +18,16 @@ const Login = () => {
 
     // Initialize Firebase Authentication and get a reference to the service
     const auth = getAuth();
+
+    const uploadPatientData =(uid)=>{
+            const db = getDatabase();
+            set(ref(db, 'patients/' + uid +'/userdetails'), {
+              displayName: dispName,
+              age: age,
+              email : email,
+              phone: phone
+            });
+    }
 
     const verifyLogin =()=>{
         setloginerr(false);
@@ -48,14 +59,15 @@ const Login = () => {
             .then((userCredential) => {
                 // Signed in 
                 const user = userCredential.user;
-                updateProfile(auth.currentUser, {
-                    displayName: dispName, photoURL: age+"#"+phone
-                }).then(() => {
-                    console.log("inserted@!!@");
-                }).catch((error) => {
-                    // An error occurred
-                    // ...
-                });
+                // updateProfile(auth.currentUser, {
+                //     displayName: dispName, photoURL: age+"#"+phone
+                // }).then(() => {
+                //     console.log("inserted@!!@");
+                // }).catch((error) => {
+                //     // An error occurred
+                //     // ...
+                // });
+                uploadPatientData(user.uid)
                 setisloader(false);
             })
             .catch((error) => {

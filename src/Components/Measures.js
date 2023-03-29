@@ -1,14 +1,39 @@
-import React, { useState } from 'react'
+import { child, get, getDatabase, ref } from 'firebase/database'
+import React, { useContext, useEffect, useState } from 'react'
 import Calendar from 'react-calendar'
+import { FireContext } from '../Config/Firebase'
 
 const Measures = () => {
     
-    const [valueExists, setvalueExists] = useState(true)
+    const { userdetails } = useContext(FireContext)
+    const [valueExists, setvalueExists] = useState(false)
     const [date, setDate] = useState(new Date())
     const [showDate, setshowDate] = useState(new Date())
+    const [dbDate, setdbDate] = useState(new Date().toLocaleDateString('en-GB').split("/").join("-"))
+    const [values, setvalues] = useState([])
+
+console.log(date.toLocaleDateString('en-GB').split("/").join("-"))
+
+    useEffect(() => {
+        const dbRef = ref(getDatabase());
+    console.log(`patients/${userdetails.uid}/values/${dbDate}`);
+        get(child(dbRef, `/patients/${userdetails.uid}/values/${dbDate}`)).then((snapshot) => {
+          if (snapshot.exists()) {
+            setvalues(snapshot.val())
+            setvalueExists(true)
+            console.log(snapshot.val());
+          } else {
+            setvalueExists(false)
+          }
+        }).catch((error) => {
+          console.error(error);
+        });
+    }, [dbDate])
+    
 
     const changeDate = (e) => {
         setDate(e)
+        setdbDate(e.toLocaleDateString('en-GB').split("/").join("-"))
     }
 
     return (
@@ -26,23 +51,23 @@ const Measures = () => {
                         <div className='width100'>
                             <div className='valuediv'>
                                 <div><b>Heart Rate</b></div>
-                                <div className='val'><b>100 bpm</b></div>
+                                <div className='val'><b>{values[0]} bpm</b></div>
                             </div>
                             <div className='valuediv'>
                                 <div><b>SpO2</b></div>
-                                <div className='val'><b>100 %</b></div>
+                                <div className='val'><b>{values[1]} %</b></div>
                             </div>
                             <div className='valuediv'>
                                 <div><b>Body Temperature</b></div>
-                                <div className='val'><b>100 °F</b></div>
+                                <div className='val'><b>{values[2]} °F</b></div>
                             </div>
                             <div className='valuediv'>
                                 <div><b>Atmospheric Temperature</b></div>
-                                <div className='val'><b>100 °C</b></div>
+                                <div className='val'><b>{values[3]} °C</b></div>
                             </div>
                             <div className='valuediv'>
                                 <div><b>Atmospheric Humidity</b></div>
-                                <div className='val'><b>100 °C</b></div>
+                                <div className='val'><b>{values[4]} °C</b></div>
                             </div>
                         </div>
                         :

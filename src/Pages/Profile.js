@@ -8,8 +8,9 @@ import { getAuth, signOut } from "firebase/auth"
 
 const Profile = () => {
 
-    const { user } = useContext(FireContext)
+    const { user, userdetails } = useContext(FireContext)
     const [bookAppo, setbookAppo] = useState(false)
+    const [date, setdate] = useState("")
 
     return (
         <div>
@@ -18,18 +19,17 @@ const Profile = () => {
                 <div className="notification profile">
                     <img className="userlogo" src="user.png" />
                     <div className="profile-head">
-                        <h1>{user.displayName}</h1>
-                        <b>{user.uid}</b>
-                    </div>
-                    {console.log(user)}
-                    <div className="user-details">
-                        <b>{user.photoURL.split('#')[0]}</b>
+                        <h1>{userdetails.displayName}</h1>
+                        <b>{userdetails.uid}</b>
                     </div>
                     <div className="user-details">
-                        <b>{user.email}</b>
+                        <b>{userdetails.age}</b>
                     </div>
                     <div className="user-details">
-                        <b>{user.photoURL.split('#')[1]}</b>
+                        <b>{userdetails.email}</b>
+                    </div>
+                    <div className="user-details">
+                        <b>{userdetails.phone}</b>
                     </div>
                     <div className="docDetails">
                         <div><b>Dr. Lokesh</b></div>
@@ -37,9 +37,9 @@ const Profile = () => {
                         {
                             bookAppo ?
                                 <div>
-                                    <input className="cal" type="date" />
+                                    <input className="cal" value={date} onChange={(e)=>setdate(e.target.value)} type="date" />
                                     <div className="dispflex">
-                                        <div className="appoBtn">Book</div>
+                                        <div onClick={()=>console.log(date)} className="appoBtn">Book</div>
                                         <div onClick={()=>setbookAppo(false)} className="appoBtn red">Cancel</div>
                                     </div>
                                 </div>
@@ -50,7 +50,7 @@ const Profile = () => {
                     <div className="logoutbtn"><div onClick={() => {
                         signOut(getAuth()).then(() => {
                             // Sign-out successful.
-                            console.log("logged ou");
+                            console.log("logged out");
                         }).catch((error) => {
                             // An error happened.
                         });

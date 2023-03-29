@@ -2,12 +2,30 @@ import React, { createContext, useEffect, useState } from 'react'
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { child, get, getDatabase, ref } from 'firebase/database';
 
 export const FireContext = createContext()
 
 const Firebase = (props) => {
   const [isapion, setIsapion] = useState(false)
   const [user, setUser] = useState(null)
+  const [isready, setisready] = useState(false)
+  const [userdetails, setuserdetails] = useState({})
+
+  const getuserdetail = (uid) => {
+    const dbRef = ref(getDatabase());
+    get(child(dbRef, `patients/${uid}/userdetails`)).then((snapshot) => {
+      if (snapshot.exists()) {
+        let data=snapshot.val()
+        data["uid"]=uid
+        setuserdetails(data);
+      } else {
+        setuserdetails({});
+      }
+    }).catch((error) => {
+      console.error(error);
+    });
+  }
 
   useEffect(() => {
     let app = null
@@ -33,10 +51,14 @@ const Firebase = (props) => {
     onAuthStateChanged(getAuth(), (user) => {
       console.log(user);
       setUser(user)
+      setisready(true)
+      if (user) {
+        getuserdetail(user.uid)
+      }
     })
   }, [isapion])
 
-  if (!isapion) {
+  if (!isapion || !isready) {
     return <div className='loadingPage'>
       <div className='center'>
         <img src="rpms.png" className='logoloader' />
@@ -45,7 +67,7 @@ const Firebase = (props) => {
     </div>
   }
   return (
-    <FireContext.Provider value={{ user }}>
+    <FireContext.Provider value={{ user, userdetails }}>
       {props.children}
     </FireContext.Provider>
   )

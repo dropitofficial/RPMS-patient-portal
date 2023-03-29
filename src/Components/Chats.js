@@ -1,11 +1,14 @@
 import { ArrowRightIcon } from '@primer/octicons-react'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { getDatabase, onChildAdded, push, ref } from 'firebase/database'
+import { FireContext } from '../Config/Firebase'
 
 const Chats = () => {
     const [reply, setReply] = useState("")
     const [messages, setMessages] = useState([])
     const messageEnd = useRef(null)
+    const {userdetails} = useContext(FireContext)
+    const [loaded, setloaded] = useState(false)
     // const [uid, setUid] = useState(localStorage.getItem(uid))
 
     const scrollToBottom = () =>{
@@ -21,7 +24,7 @@ useEffect(() => {
 
 
     useEffect(() => {
-        const unsubscribe = onChildAdded(ref(getDatabase(), "messages/t8QV7laQMdgaol3smIbaD8dxHdy21677127724271"), (snap) => [
+        const unsubscribe = onChildAdded(ref(getDatabase(), `/messages/${userdetails.uid}`), (snap) => [
             setMessages(pre => {
                 if(pre.length && pre[pre.length-1].msg == snap.val().message) return pre
 
@@ -33,13 +36,13 @@ useEffect(() => {
                 ]
             })
         ])
-
+        setloaded(true)
         return () => unsubscribe
     }, [])
 
     const sendmessage = () => {
         if (reply != "")
-            push(ref(getDatabase(), `messages/t8QV7laQMdgaol3smIbaD8dxHdy21677127724271`),{
+            push(ref(getDatabase(), `/messages/${userdetails.uid}`),{
                 message:reply,
                 isdoctor:false
             }).then(() => {
@@ -68,7 +71,7 @@ useEffect(() => {
                             ))
                         }
                         {
-                            messages.length==0&&
+                            messages.length==0&&loaded&&
                             (
                                 <div className="chatloader loader"></div>
                             )
