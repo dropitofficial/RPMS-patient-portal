@@ -63,7 +63,7 @@ const Measures = () => {
                             </div>
                             <div className='valuediv'>
                                 <div><b>Atmospheric Humidity</b></div>
-                                <div className='val'><b>{values[4]} °C</b></div>
+                                <div className='val'><b>{values[4]} %</b></div>
                             </div>
                         </div>
                         :
