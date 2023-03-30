@@ -25,11 +25,25 @@ const Profile = () => {
         );
     }
 
+    const deleteAppointment=()=>{
+        const db = getDatabase();
+        set(ref(db, 'appointments/' + userdetails.uid), {
+            on: null
+        })
+    }
+
 
     const copyuid = () => {
         navigator.clipboard.writeText(userdetails.uid);
         alert(userdetails.uid)
     }
+
+    const todaysDate=()=>{
+        var today = new Date().toLocaleDateString('en-GB').split("/").reverse().join("-");
+        console.log(today);
+        return today
+    }
+
     useEffect(() => {
         if(!userdetails.uid) return
 
@@ -41,6 +55,10 @@ const Profile = () => {
             if (data) {
                 setdate(data);
                 setbookAppo(false)
+            }
+            else
+            {
+                setdate("")
             }
         });
 
@@ -74,7 +92,7 @@ const Profile = () => {
                         {
                             bookAppo ?
                                 <div>
-                                    <input className="cal" value={date} onChange={(e) => setdate(e.target.value)} type="date" />
+                                    <input className="cal" min={todaysDate()} value={date} onChange={(e) => setdate(e.target.value)} type="date" />
                                     <div className="dispflex">
                                         <div onClick={() => bookAppointment(userdetails.uid)} className="appoBtn">
                                             {isloader ?
@@ -91,8 +109,8 @@ const Profile = () => {
                                 :
                                 date ?
                                 <div className="afterbooked appoBtn">
-                                    <div className="">Appointment on {date}</div>
-                                    <div className="trash"><TrashIcon size={16} /></div>
+                                    <div className="">Appointment on {date.split("-").reverse().join("-")}</div>
+                                    <div onClick={()=>deleteAppointment()} className="trash"><TrashIcon size={16} /></div>
                                     </div>
                                     : 
                                     <div className="appoBtn" onClick={() => setbookAppo(true)}>Book Appointment</div>
