@@ -25,7 +25,6 @@ const Measures = () => {
           console.error(error);
         });
     }, [dbDate])
-    
 
     const changeDate = (e) => {
         setDate(e)
@@ -73,7 +72,7 @@ const Measures = () => {
                 }
             </div>
             <div className='calander'>
-                <Calendar onChange={changeDate} value={date} />
+                <Calendar maxDate={new Date()} onChange={changeDate} value={date} />
             </div>
         </div>
     )
