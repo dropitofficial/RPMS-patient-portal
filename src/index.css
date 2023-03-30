@@ -491,3 +491,18 @@ code {
   font-size: 14px;
   background-color: #15335d;
 }
+.afterbooked{
+  display: flex;
+  align-items: center;
+}
+.trash{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 15px;
+  background: red;
+  cursor: pointer;
+  height: 35px;
+  width: 35px;
+  border-radius: 8px;
+}

@@ -1,9 +1,10 @@
-import React, { useContext, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { FireContext } from '../Config/Firebase';
-import { ChevronRightIcon, ShareAndroidIcon, SyncIcon } from "@primer/octicons-react"
+import { ChevronRightIcon, ShareAndroidIcon, SyncIcon, TrashIcon } from "@primer/octicons-react"
 import Header from "../Components/Header"
 import { getAuth, signOut } from "firebase/auth"
+import { getDatabase, onValue, ref, set } from "firebase/database";
 // import { GithubFilled, InstagramFilled, LinkedinFilled } from "@ant-design/icons"
 
 const Profile = () => {
@@ -11,11 +12,41 @@ const Profile = () => {
     const { user, userdetails } = useContext(FireContext)
     const [bookAppo, setbookAppo] = useState(false)
     const [date, setdate] = useState("")
+    const [isloader, setisloader] = useState(false)
 
-    const copyuid=()=>{
+    const bookAppointment = (uid) => {
+        setisloader(true)
+        const db = getDatabase();
+        set(ref(db, 'appointments/' + uid), {
+            on: date
+        }).then(
+            setisloader(false),
+            
+        );
+    }
+
+
+    const copyuid = () => {
         navigator.clipboard.writeText(userdetails.uid);
         alert(userdetails.uid)
     }
+    useEffect(() => {
+        if(!userdetails.uid) return
+
+        const db = getDatabase();
+        const starCountRef = ref(db, 'appointments/' + userdetails.uid + '/on');
+        const unsubscribe = onValue(starCountRef, (snapshot) => {
+            const data = snapshot.val();
+            console.log(data);
+            if (data) {
+                setdate(data);
+                setbookAppo(false)
+            }
+        });
+
+        return () => unsubscribe
+    }, [userdetails.uid])
+
 
     return (
         <div>
@@ -25,7 +56,7 @@ const Profile = () => {
                     <img className="userlogo" src="user.png" />
                     <div className="profile-head">
                         <h1>{userdetails.displayName}</h1>
-                        <div onClick={()=>copyuid()} className="copybtn">Patient UID</div>
+                        <div onClick={() => copyuid()} className="copybtn">Patient UID</div>
                         {/* <b>{userdetails.uid}</b> */}
                     </div>
                     <div className="user-details">
@@ -43,15 +74,29 @@ const Profile = () => {
                         {
                             bookAppo ?
                                 <div>
-                                    <input className="cal" value={date} onChange={(e)=>setdate(e.target.value)} type="date" />
+                                    <input className="cal" value={date} onChange={(e) => setdate(e.target.value)} type="date" />
                                     <div className="dispflex">
-                                        <div onClick={()=>console.log(date)} className="appoBtn">Book</div>
-                                        <div onClick={()=>setbookAppo(false)} className="appoBtn red">Cancel</div>
+                                        <div onClick={() => bookAppointment(userdetails.uid)} className="appoBtn">
+                                            {isloader ?
+                                                <div className="loader"></div>
+                                                :
+                                                <b>Book</b>
+
+                                            }
+
+                                        </div>
+                                        <div onClick={() => setbookAppo(false)} className="appoBtn red">Cancel</div>
                                     </div>
                                 </div>
                                 :
-                                <div className="appoBtn" onClick={() => setbookAppo(true)} >Book Appointment</div>
-                        }
+                                date ?
+                                <div className="afterbooked appoBtn">
+                                    <div className="">Appointment on {date}</div>
+                                    <div className="trash"><TrashIcon size={16} /></div>
+                                    </div>
+                                    : 
+                                    <div className="appoBtn" onClick={() => setbookAppo(true)}>Book Appointment</div>
+                        } 
                     </div>
                     <div className="logoutbtn"><div onClick={() => {
                         signOut(getAuth()).then(() => {
